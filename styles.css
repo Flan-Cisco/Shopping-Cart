@@ -1,0 +1,25 @@
+#fila-producto {
+    display: grid; 
+    grid-template-columns: 0.5fr 1fr; 
+    grid-template-rows: 1fr; 
+    gap: 0px 0px; 
+    grid-template-areas: 
+      "imagenConteiner btn"; 
+  }
+  .imagenContainer {
+    display: grid; 
+    grid-template-columns: 1fr; 
+    grid-template-rows: 0.5fr 0.5fr; 
+    gap: 0px 0px; 
+    grid-template-areas: 
+      "Imagen"
+      "Submit"; 
+    grid-area: imagenConteiner;
+    justify-items: center;
+  }
+  .Imagen { grid-area: Imagen; }
+  .Submit { grid-area: Submit; }
+  .btn {
+    grid-area: btn;
+    margin: 31px 0px;
+}
