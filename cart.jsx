@@ -2,14 +2,13 @@
 const products = [
   { name: "Apples", country: "Italy", cost: 3, instock: 10 },
   { name: "Oranges:", country: "Spain", cost: 4, instock: 3 },
-  { name: "Beans__:", country: "USA", cost: 2, instock: 5 },
+  { name: "Beans:", country: "USA", cost: 2, instock: 5 },
   { name: "Cabbage:", country: "USA", cost: 1, instock: 8 },
 ];
 //=========Cart=============
 const Cart = (props) => {
   const { Card, Accordion, Button } = ReactBootstrap;
   let data = props.location.data ? props.location.data : products;
-  console.log(`data:${JSON.stringify(data)}`);
 
   return <Accordion defaultActiveKey="0">{list}</Accordion>;
 };
@@ -23,15 +22,12 @@ const useDataApi = (initialUrl, initialData) => {
     isError: false,
     data: initialData,
   });
-  console.log(`useDataApi called`);
   useEffect(() => {
-    console.log("useEffect Called");
     let didCancel = false;
     const fetchData = async () => {
       dispatch({ type: "FETCH_INIT" });
       try {
         const result = await axios(url);
-        console.log("FETCH FROM URl");
         if (!didCancel) {
           dispatch({ type: "FETCH_SUCCESS", payload: result.data });
         }
@@ -89,7 +85,6 @@ const Products = (props) => {
       data: [],
     }
   );
-  console.log(`Rendering Products ${JSON.stringify(data)}`);
   // Fetch Data
   const addToCart = (e) => {
     let name = e.target.name;
@@ -97,19 +92,17 @@ const Products = (props) => {
     if (item[0].instock > 0) {
       item[0].instock--;
       setCart([...cart, ...item]);
-      setItems(items)
+      setItems(items);
       //doFetch(query);
     }
   };
   const deleteCartItem = (index) => {
-    console.log("cart",cart[index]);
     let itemName = cart[index].name;
     let itemsTmp = items;
     let itemIndex = itemsTmp.findIndex((item) => item.name == itemName);
     itemsTmp[itemIndex].instock++;
     setItems(itemsTmp);
     let newCart = cart.filter((item, i) => index != i);
-    console.log("newCart",newCart)
     setCart(newCart);
   };
   // const photos = "https://picsum.photos/200";
@@ -171,21 +164,18 @@ const Products = (props) => {
     let costs = cart.map((item) => item.cost);
     const reducer = (accum, current) => accum + current;
     let newTotal = costs.reduce(reducer, 0);
-    console.log(`total updated to ${newTotal}`);
     return newTotal;
   };
   // TODO: implement the restockProducts function
   const restockProducts = async (url) => {
     await doFetch(url);
     let reStock = data.map((item) => {
-      let { name, country, cost, instock} = item;
-      return { name, country, cost, instock}
-    })
+      let { name, country, cost, instock } = item;
+      return { name, country, cost, instock };
+    });
 
-    //Duplicated products don't get added again to the list
-    const mergedArray = [...items, ...reStock.filter(itemReStock => !items.some(item => item.name === itemReStock.name))];
-    setItems(mergedArray)
-    
+    //TODO: Duplicated products shouldn't get added again to the list
+    setItems([...items,...reStock]);
   };
 
   return (
@@ -209,12 +199,11 @@ const Products = (props) => {
         <form
           onSubmit={(event) => {
             restockProducts(query);
-            console.log(`Restock called on ${query}`);
             event.preventDefault();
           }}
         >
           <input
-            id= "queryInput"
+            id="queryInput"
             type="text"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
